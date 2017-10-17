@@ -1,5 +1,10 @@
-const model = (sequelize, DataTypes) => {
-  let User = sequelize.define('User', {
+'use strict';
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+var model = function model(sequelize, DataTypes) {
+  var User = sequelize.define('User', {
     id: {
       type: DataTypes.INTEGER,
       autoIncrement: true,
@@ -122,9 +127,9 @@ const model = (sequelize, DataTypes) => {
     }
   });
 
-  User.associate = models => {};
+  User.associate = function (models) {};
 
   return User;
 };
 
-export default model;
+exports.default = model;

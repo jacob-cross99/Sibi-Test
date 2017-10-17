@@ -1,26 +1,42 @@
-/*
-  This is built to convert the old database into a
-  more modern ORM structure, as well as to add support
-  for multiple payment methods and to salt/hash passwords
-  for security means
-*/
-import async from 'async';
-import bcrypt from 'bcryptjs';
+'use strict';
 
-import db from './lib/database';
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.default = migrator;
 
-const { User, sequelize } = db;
+var _async = require('async');
 
-export default function migrator() {
+var _async2 = _interopRequireDefault(_async);
+
+var _bcryptjs = require('bcryptjs');
+
+var _bcryptjs2 = _interopRequireDefault(_bcryptjs);
+
+var _database = require('./lib/database');
+
+var _database2 = _interopRequireDefault(_database);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var User = _database2.default.User,
+    sequelize = _database2.default.sequelize; /*
+                                                This is built to convert the old database into a
+                                                more modern ORM structure, as well as to add support
+                                                for multiple payment methods and to salt/hash passwords
+                                                for security means
+                                              */
+
+function migrator() {
   console.log('Starting migrator...');
 
-  return new Promise((resolve, reject) => {
+  return new Promise(function (resolve, reject) {
     sequelize.query('SELECT * FROM oldusers WHERE 1=1 ORDER BY Number ASC', {
       type: sequelize.QueryTypes.SELECT
-    }).then(users => {
+    }).then(function (users) {
       console.log('Pulled old users...');
 
-      for (let x = 0; x < users.length; x++) {
+      for (var x = 0; x < users.length; x++) {
         users[x] = {
           id: users[x].number,
           gender: users[x].gender,
@@ -66,24 +82,28 @@ export default function migrator() {
 
       console.log('Reformatted users...');
 
-      async.eachSeries(users, (user, next) => {
-        bcrypt.genSalt(10, (err, salt) => {
+      _async2.default.eachSeries(users, function (user, next) {
+        _bcryptjs2.default.genSalt(10, function (err, salt) {
           if (err) return reject(err);
-          bcrypt.hash(user.password, salt, (err, hash) => {
+          _bcryptjs2.default.hash(user.password, salt, function (err, hash) {
             if (err) return reject(err);
             user.password = hash;
             console.log('Hashed user: ' + user.id);
             next();
           });
         });
-      }, err => {
+      }, function (err) {
         if (err) return reject(err);
         console.log('Hashed passwords...');
 
-        User.bulkCreate(users).then(newUsers => resolve()).catch(err => {
+        User.bulkCreate(users).then(function (newUsers) {
+          return resolve();
+        }).catch(function (err) {
           reject(err);
         });
       });
-    }).catch(err => reject(err));
+    }).catch(function (err) {
+      return reject(err);
+    });
   });
 }
