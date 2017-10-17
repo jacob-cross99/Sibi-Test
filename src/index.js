@@ -13,6 +13,7 @@ let app = express();
 app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
+app.use(express.static(path.resolve(__dirname + '/../public')));
 
 // Routes
 app.use('/v1/users', routes.v1.users);
