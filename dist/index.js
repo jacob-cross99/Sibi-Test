@@ -34,6 +34,7 @@ var app = (0, _express2.default)();
 app.use((0, _cors2.default)());
 app.use(_bodyParser2.default.urlencoded({ extended: false }));
 app.use(_bodyParser2.default.json());
+app.use(_express2.default.static(_path2.default.resolve(__dirname + '/../public')));
 
 // Routes
 app.use('/v1/users', _routes2.default.v1.users);
