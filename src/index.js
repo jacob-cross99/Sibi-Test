@@ -2,15 +2,12 @@ import path from 'path';
 
 import express from 'express';
 import bodyParser from 'body-parser';
-import cors from 'cors';
-
 import migrator from './migrator';
 
 import db from './lib/database';
 import routes from './lib/routes';
 
 let app = express();
-app.use(cors());
 app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 app.use(express.static(path.resolve(__dirname + '/../public')));
